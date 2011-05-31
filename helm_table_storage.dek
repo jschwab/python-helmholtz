@@ -123,7 +123,7 @@
                        dti_sav_ion(jmax),dt2i_sav_ion(jmax), &
                        dt3i_sav_ion(jmax),dd_sav_ion(imax), &
                        dd2_sav_ion(imax),ddi_sav_ion(imax), &
-                       dd2i_sav_ion(imax),dd3i_sav_ion(jmax)
+                       dd2i_sav_ion(imax),dd3i_sav_ion(imax)
 
       common /diftabc2/dt_sav_ion,dt2_sav_ion, &
                        dti_sav_ion,dt2i_sav_ion, &
