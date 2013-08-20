@@ -165,14 +165,14 @@
                        chit_gas,chid_gas,nabad_gas,sound_gas
 
 
-      double precision sioncon,forth,forpi,kergavo,ikavo,asoli3,light2
-      parameter        (sioncon = (2.0d0 * pi * amu * kerg)/(h*h), &
-                        forth   = 4.0d0/3.0d0, &
-                        forpi   = 4.0d0 * pi, &
-                        kergavo = kerg * avo, &
-                        ikavo   = 1.0d0/kergavo, &
-                        asoli3  = asol/3.0d0, &
-                        light2  = clight * clight)
+      double precision, parameter :: sioncon = (2.0d0 * pi * amu * kerg)/(h*h)
+      double precision forth,forpi,kergavo,ikavo,asoli3,light2
+      parameter        ( forth   = 4.0d0/3.0d0 )
+      parameter        ( forpi   = 4.0d0 * pi )
+      parameter        ( kergavo = kerg * avo )
+      parameter        ( ikavo   = 1.0d0/kergavo )
+      parameter        ( asoli3  = asol/3.0d0 )
+      parameter        ( light2  = clight * clight )
 
 ! for the abar derivatives
       double precision dpradda,deradda,dsradda, &
