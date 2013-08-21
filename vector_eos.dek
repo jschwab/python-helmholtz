@@ -567,7 +567,7 @@
                 dcvdd_row(nrowmax),dcvdt_row(nrowmax), &
                 dcvda_row(nrowmax),dcvdz_row(nrowmax)
 
-      common /thdergc1/ &
+      common /thdertc1/ &
                 cp_row, &
                 dcpdd_row,dcpdt_row, &
                 dcpda_row,dcpdz_row, &
@@ -592,7 +592,7 @@
                 dcsdd_row(nrowmax),dcsdt_row(nrowmax), &
                 dcsda_row(nrowmax),dcsdz_row(nrowmax)
 
-      common /thdergc2/ &
+      common /thdertc2/ &
                 gam1_row, &
                 dgam1dd_row,dgam1dt_row, &
                 dgam1da_row,dgam1dz_row, &
