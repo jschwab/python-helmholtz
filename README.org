@@ -1,0 +1,17 @@
+* python-helmholtz
+Python bindings for Frank Timmes' helmholtz EoS.
+** Prerequisites
+You must have numpy and a fortran compiler installed.  This is only
+tested on python3, though in principle one should be able to
+relatively easily adapt it to python2.
+** Installation
+Simply type
+#+BEGIN_EXAMPLE
+make module
+#+END_EXAMPLE
+and then add this directory to your python path
+#+BEGIN_EXAMPLE
+export $PYTHONPATH=/path/to/module:$PYTHONPATH
+#+END_EXAMPLE
+** Author
+Josiah Schwab <jschwab at gmail dot com>
