@@ -15,7 +15,7 @@ helmholtz.o : helmholtz.f90
 	${FC} -cpp -DTBLPATH="'${HELM_TABLE_DIR}/${HELM_TABLE_NAME}'" -c -fPIC $<
 
 %.o : %.f90
-	${FC} -c -$<
+	${FC} -c $<
 
 clean:
 	rm -f *.o *.x
