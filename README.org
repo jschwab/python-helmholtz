@@ -1,5 +1,5 @@
 * python-helmholtz
-Python bindings for Frank Timmes' helmholtz EoS.
+Python bindings for [[http://cococubed.asu.edu/code_pages/eos.shtml][Frank Timmes' Helmholtz EoS]].
 ** Prerequisites
 You must have numpy and a fortran compiler installed.  This is only
 tested on python3, though in principle one should be able to
