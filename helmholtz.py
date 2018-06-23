@@ -114,6 +114,6 @@ def helmeos_DS(dens, entr, abar, zbar, tguess = None):
     size, shape, finputs = _make_uniform_arrays(inputs)
 
     # call the eos
-    fhelmholtz.call_helmeos_de(*finputs)
+    fhelmholtz.call_helmeos_ds(*finputs)
 
     return HelmholtzOutput(size, shape)
