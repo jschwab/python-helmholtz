@@ -90,7 +90,7 @@ def helmeos_DE(dens, ener, abar, zbar, tguess = None):
 def helmeos_DP(dens, pres, abar, zbar, tguess = None):
 
     # set default temperature guess
-    if tguess == None:
+    if tguess is None:
         tguess = 1e7
 
     # make sure everything is the same size and shape
@@ -106,7 +106,7 @@ def helmeos_DP(dens, pres, abar, zbar, tguess = None):
 def helmeos_DS(dens, entr, abar, zbar, tguess = None):
 
     # set default temperature guess
-    if tguess == None:
+    if tguess is None:
         tguess = 1e7
 
     # make sure everything is the same size and shape
