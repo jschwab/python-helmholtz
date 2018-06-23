@@ -12,7 +12,7 @@ test: test.o helmholtz.o
 	./test.x
 
 helmholtz.o : helmholtz.f90
-	${FC} -cpp -DTBLPATH="'${HELM_TABLE_DIR}/${HELM_TABLE_NAME}'" -c -fPIC $<
+	${FC} -cpp -DTBLPATH="'${HELM_TABLE_DIR}/${HELM_TABLE_NAME}'" -ffree-line-length-none -c -fPIC $<
 
 %.o : %.f90
 	${FC} -c $<
