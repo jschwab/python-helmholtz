@@ -11,7 +11,7 @@ make module
 #+END_EXAMPLE
 and then add this directory to your python path
 #+BEGIN_EXAMPLE
-export $PYTHONPATH=/path/to/module:$PYTHONPATH
+export PYTHONPATH=/path/to/module:$PYTHONPATH
 #+END_EXAMPLE
 ** Author
 Josiah Schwab <jschwab at gmail dot com>
