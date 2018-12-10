@@ -13,6 +13,17 @@ example,
 #+BEGIN_EXAMPLE
 git clone git@github.com:jschwab/python-helmholtz.git helmholtz
 #+END_EXAMPLE
+
+The Makefile contains several relevant executable names and paths.
+The defaults are sensible, but you might need/want to edit them (for
+example, if your system appends "3" to python3 related executables).
+#+BEGIN_EXAMPLE
+  FC=gfortran
+  F2PY=f2py
+  HELM_TABLE_DIR=$(shell pwd)
+  HELM_TABLE_NAME=helm_table.dat
+#+END_EXAMPLE
+
 Then in this directory, simply type
 #+BEGIN_EXAMPLE
 make module
