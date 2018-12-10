@@ -1,12 +1,56 @@
+      program teos
+      include 'implno.dek'
+      include 'vector_eos.dek'
+
+! tests the eos routine
+! 
+! ionmax  = number of isotopes in the network
+! xmass   = mass fraction of isotope i
+! aion    = number of nucleons in isotope i
+! zion    = number of protons in isotope i
+
+      integer          ionmax
+      parameter        (ionmax=3)
+      double precision xmass(ionmax),aion(ionmax),zion(ionmax),temp,den,abar,zbar
+
+
+! set the mass fractions, z's and a's of the composition
+! hydrogen, helium, and carbon
+
+      xmass(1) = 0.75d0 ; aion(1)  = 1.0d0  ; zion(1)  = 1.0d0
+      xmass(2) = 0.23d0 ; aion(2)  = 4.0d0  ; zion(2)  = 2.0d0
+      xmass(3) = 0.02d0 ; aion(3)  = 12.0d0 ; zion(3)  = 6.0d0
+
+! average atomic weight and charge
+      abar   = 1.0d0/sum(xmass(1:ionmax)/aion(1:ionmax))
+      zbar   = abar * sum(xmass(1:ionmax) * zion(1:ionmax)/aion(1:ionmax))
+
+
+! set the input vector. pipeline is only 1 element long in this example
+      temp_row(1) = 1.0d8 ; den_row(1)  = 1.0d6 ; abar_row(1) = abar ; zbar_row(1) = zbar
+      jlo_eos = 1 ; jhi_eos = 1
+
+
+! read the helmholtz free energy data table - only once
+      call read_helm_table
+
+! call the eos
+      call helmeos
+
+! write out the results
+      call pretty_eos_out('helm:  ')
+
+      end   
+
+
+
+
+
+
 ! here is the tabular helmholtz free energy eos:
 !
 ! routine read_helm_table reads an electron helm free energy table
-! routine read_helm_iontable reads an ion free energy table
 ! routine helmeos computes the pressure, energy and entropy via tables
-! routine helmeos3 uses fermionic ions
-! routine helmeos2 adds third derivatives
-! routine helmeos_orig as helmeos with the table read inside the routine
-
 
 
       subroutine read_helm_table
@@ -48,6 +92,7 @@
                   fddt(i,j),fdtt(i,j),fddtt(i,j)
         enddo
        enddo
+!       write(6,*) 'read main table'
 
 
 ! read the pressure derivative with density table
@@ -56,6 +101,7 @@
          read(19,*) dpdf(i,j),dpdfd(i,j),dpdft(i,j),dpdfdt(i,j)
         enddo
        enddo
+!       write(6,*) 'read dpdd table'
 
 ! read the electron chemical potential table
        do j=1,jmax
@@ -63,6 +109,7 @@
          read(19,*) ef(i,j),efd(i,j),eft(i,j),efdt(i,j)
         enddo
        enddo
+!       write(6,*) 'read eta table'
 
 ! read the number density table
        do j=1,jmax
@@ -70,8 +117,9 @@
          read(19,*) xf(i,j),xfd(i,j),xft(i,j),xfdt(i,j)
         enddo
        enddo
+!       write(6,*) 'read xne table'
 
-! close the file and write a summary message
+! close the file
       close(unit=19)
 
 
@@ -115,6 +163,117 @@
       return
       end
 
+
+
+
+
+
+      subroutine read_helm_iontable
+      include 'implno.dek'
+      include 'helm_table_storage.dek'
+
+! this routine reads the helmholtz eos file, and
+! must be called once before the helmeos routine is invoked.
+
+! declare local variables
+      integer          i,j
+      double precision tsav,dsav,dth,dt2,dti,dt2i,dt3i, &
+                       dd,dd2,ddi,dd2i,dd3i
+
+
+! open the file (use softlinks to input the desired table)
+
+       open(unit=19,file='helm_iontable.dat',status='old')
+
+
+! for the standard table
+       tion_lo   = 3.0d0
+       tion_hi   = 13.0d0
+       tion_stp  = (thi - tlo)/float(jmax-1)
+       tion_stpi = 1.0d0/tstp
+       dion_lo   = -12.0d0
+       dion_hi   = 15.0d0
+       dion_stp  = (dhi - dlo)/float(imax-1)
+       dion_stpi = 1.0d0/dstp
+
+! read the helmholtz free energy and its derivatives
+       do j=1,jmax
+        tsav = tion_lo + (j-1)*tion_stp
+        tion(j) = 10.0d0**(tsav)
+        do i=1,imax
+         dsav = dion_lo + (i-1)*dion_stp
+         dion(i) = 10.0d0**(dsav)
+         read(19,*) fion(i,j),fiond(i,j),fiont(i,j),fiondd(i,j), &
+                    fiontt(i,j),fiondt(i,j),fionddt(i,j),fiondtt(i,j), &
+                    fionddtt(i,j)
+        enddo
+       enddo
+
+
+! read the pressure derivative with density table
+       do j=1,jmax
+        do i=1,imax
+         read(19,*) dpiondf(i,j),dpiondfd(i,j), &
+                    dpiondft(i,j),dpiondfdt(i,j)
+        enddo
+       enddo
+
+! read the electron chemical potential table
+       do j=1,jmax
+        do i=1,imax
+         read(19,*) efion(i,j),efiond(i,j),efiont(i,j),efiondt(i,j)
+        enddo
+       enddo
+
+! read the number density table
+       do j=1,jmax
+        do i=1,imax
+         read(19,*) xfion(i,j),xfiond(i,j),xfiont(i,j),xfiondt(i,j)
+        enddo
+       enddo
+
+! close the file
+      close(unit=19)
+
+
+! construct the temperature and density deltas and their inverses
+       do j=1,jmax-1
+        dth             = t(j+1) - t(j)
+        dt2             = dth * dth
+        dti             = 1.0d0/dth
+        dt2i            = 1.0d0/dt2
+        dt3i            = dt2i*dti
+        dt_sav_ion(j)   = dth
+        dt2_sav_ion(j)  = dt2
+        dti_sav_ion(j)  = dti
+        dt2i_sav_ion(j) = dt2i
+        dt3i_sav_ion(j) = dt3i
+       end do
+       do i=1,imax-1
+        dd              = d(i+1) - d(i)
+        dd2             = dd * dd
+        ddi             = 1.0d0/dd
+        dd2i            = 1.0d0/dd2
+        dd3i            = dd2i*ddi
+        dd_sav_ion(i)   = dd
+        dd2_sav_ion(i)  = dd2
+        ddi_sav_ion(i)  = ddi
+        dd2i_sav_ion(i) = dd2i
+        dd3i_sav_ion(i) = dd3i
+       enddo
+
+
+!      write(6,*)
+!      write(6,*) 'finished reading eos ion table'
+!      write(6,04) 'imax=',imax,' jmax=',jmax
+!04    format(1x,4(a,i4))
+!      write(6,03) 'temp(1)     =',tion(1),' temp(jmax)     =',tion(jmax)
+!      write(6,03) 'ytot*den(1) =',dion(1),' ytot*den(imax) =',dion(imax)
+!03    format(1x,4(a,1pe11.3))
+!      write(6,*)
+
+      return
+      end
 
 
 
@@ -165,14 +324,14 @@
                        chit_gas,chid_gas,nabad_gas,sound_gas
 
 
-      double precision, parameter :: sioncon = (2.0d0 * pi * amu * kerg)/(h*h)
-      double precision forth,forpi,kergavo,ikavo,asoli3,light2
-      parameter        ( forth   = 4.0d0/3.0d0 )
-      parameter        ( forpi   = 4.0d0 * pi )
-      parameter        ( kergavo = kerg * avo )
-      parameter        ( ikavo   = 1.0d0/kergavo )
-      parameter        ( asoli3  = asol/3.0d0 )
-      parameter        ( light2  = clight * clight )
+      double precision sioncon,forth,forpi,kergavo,ikavo,asoli3,light2
+      parameter        (sioncon = (2.0d0 * pi * amu * kerg)/(h*h), &
+                        forth   = 4.0d0/3.0d0, &
+                        forpi   = 4.0d0 * pi, &
+                        kergavo = kerg * avo, &
+                        ikavo   = 1.0d0/kergavo, &
+                        asoli3  = asol/3.0d0, &
+                        light2  = clight * clight)
 
 ! for the abar derivatives
       double precision dpradda,deradda,dsradda, &
@@ -823,8 +982,8 @@
         z   = srad + sion + sele + scoul
 
 !        write(6,*) x,y,z
-        if (x .le. 0.0 .or. y .le. 0.0 .or. z .le. 0.0) then
-!        if (x .le. 0.0 .or. y .le. 0.0) then
+!        if (x .le. 0.0 .or. y .le. 0.0 .or. z .le. 0.0) then
+        if (x .le. 0.0 .or. y .le. 0.0) then
 !        if (x .le. 0.0) then
 
 !         write(6,*)
@@ -1111,6 +1270,11 @@
 
 
 
+
+
+
+
+
       subroutine pretty_eos_out(whose)
       include 'implno.dek'
       include 'vector_eos.dek'
@@ -1291,4 +1455,5 @@
 
       return
       end
+
 

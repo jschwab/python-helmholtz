@@ -2,8 +2,9 @@
 
 ! maximum length of the row vector
       integer   nrowmax
-      parameter (nrowmax = 1000)
 !      parameter (nrowmax = 1000)
+!      parameter (nrowmax = 10000)
+      parameter (nrowmax = 1000000)
 
 
 ! maximum number of isotopes
@@ -467,9 +468,17 @@
 
 ! ionization potential contributions
       double precision pip_row(nrowmax), &
-                       eip_row(nrowmax), &
-                       sip_row(nrowmax)
-      common /thxip/   pip_row,eip_row,sip_row
+                       dpipt_row(nrowmax), dpipd_row(nrowmax), &
+                       dpipa_row(nrowmax), dpipz_row(nrowmax), &
+                       eip_row(nrowmax), & 
+                       deipt_row(nrowmax), deipd_row(nrowmax), &
+                       deipa_row(nrowmax), deipz_row(nrowmax), &
+                       sip_row(nrowmax), &
+                       dsipt_row(nrowmax), dsipd_row(nrowmax), &
+                       dsipa_row(nrowmax), dsipz_row(nrowmax)
+      common /thxip/   pip_row,dpipt_row,dpipd_row,dpipa_row,dpipz_row, &
+                       eip_row,deipt_row,deipd_row,deipa_row,deipz_row, &
+                       sip_row,dsipt_row,dsipd_row,dsipa_row,dsipz_row
 
 
 

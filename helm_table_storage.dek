@@ -7,10 +7,10 @@
 !      parameter        (imax = 211, jmax = 71)
 
 ! standard
-      parameter        (imax = 271, jmax = 101)
+!      parameter        (imax = 271, jmax = 101)
 
 ! twice as dense
-!      parameter        (imax = 541, jmax = 201)
+      parameter        (imax = 541, jmax = 201)
 
 ! half as dense
 !      parameter        (imax = 136, jmax = 51)
