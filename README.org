@@ -1,11 +1,19 @@
 * python-helmholtz
 Python bindings for [[http://cococubed.asu.edu/code_pages/eos.shtml][Frank Timmes' Helmholtz EoS]].
 ** Prerequisites
-You must have numpy and a fortran compiler installed.  This is only
-tested on python3, though in principle one should be able to
-relatively easily adapt it to python2.
+You must have numpy and a fortran compiler installed.  These bindings
+are constructed using [[https://docs.scipy.org/doc/numpy/f2py/index.html][f2py]].
+
+This is only tested on python3, though in principle one should be able
+to relatively easily adapt it to python2.
 ** Installation
-Simply type
+Python determines the module name using the path name, so you should
+change the root folder of this git repository to helmholtz.  For
+example,
+#+BEGIN_EXAMPLE
+git clone git@github.com:jschwab/python-helmholtz.git helmholtz
+#+END_EXAMPLE
+Then in this directory, simply type
 #+BEGIN_EXAMPLE
 make module
 #+END_EXAMPLE
@@ -13,5 +21,16 @@ and then add this directory to your python path
 #+BEGIN_EXAMPLE
 export PYTHONPATH=/path/to/module:$PYTHONPATH
 #+END_EXAMPLE
+** Changes from helmholtz
+This code has only cosmetic changes from the version of helmholtz
+provided on Frank Timmes website (last updated 2018-12-10).
+
++ Set ionization variables irowmax and jstagemax to 1
++ Set nrowmax to 1,000,000 (allowing large arrays)
++ Set path to helm_table.dat at compile time
+
+At least in theory, updates can be performed by simply untar-ing a new
+version of helmholtz and accepting all code changes except for these.
+
 ** Author
 Josiah Schwab <jschwab at gmail dot com>
