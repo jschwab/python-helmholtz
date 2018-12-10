@@ -1,4 +1,5 @@
 from . import fhelmholtz
+from . import ftimmes
 import numpy as np
 
 # list of common blocks that hold interesting information
@@ -21,6 +22,30 @@ class HelmholtzOutput:
         # loop through and nicely reformat everything
         for cblock_name in CBLOCK_NAMES:
             cblock = getattr(fhelmholtz,cblock_name)
+            for row_name in vars(cblock):
+                row_data = np.copy(getattr(cblock,row_name))
+                setattr(self, self._demangle(row_name), self._reshape(row_data))
+
+    def _demangle(self, name):
+        # remove the "_row" postfix
+        return name[:-4]
+
+    def _reshape(self, data):
+        # put things back like they came in
+        return np.reshape(data[:self.size], self.shape)
+
+
+class TimmesOutput:
+
+    def __init__(self, size, shape):
+
+        # set size and shape data
+        self.size = size
+        self.shape = shape
+
+        # loop through and nicely reformat everything
+        for cblock_name in CBLOCK_NAMES:
+            cblock = getattr(ftimmes,cblock_name)
             for row_name in vars(cblock):
                 row_data = np.copy(getattr(cblock,row_name))
                 setattr(self, self._demangle(row_name), self._reshape(row_data))
@@ -117,3 +142,16 @@ def helmeos_DS(dens, entr, abar, zbar, tguess = None):
     fhelmholtz.call_helmeos_ds(*finputs)
 
     return HelmholtzOutput(size, shape)
+
+
+def eosfxt(dens, temp, abar, zbar):
+
+    # make sure everything is the same size and shape
+    inputs = (dens, temp, abar, zbar)
+    size, shape, finputs = _make_uniform_arrays(inputs)
+
+    # call the eos
+    ftimmes.call_eosfxt(*finputs)
+
+    # container for output
+    return TimmesOutput(size, shape)
