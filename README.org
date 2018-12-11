@@ -68,14 +68,14 @@ for ax, t in zip(axs, ts):
     ax.set_ylabel(r'fractional difference')
     ax.set_xscale('log')
     ax.set_yscale('log')
-    ax.set_ylim(1e-12, 1e-4)
+    ax.set_ylim(1e-12, 1e0)
 
     logT = int(np.log10(t))
-    ax.text(1e-2, 3e-6, '$T = 10^{}$ K'.format(logT))
+    ax.text(1e-2, 3e-6, '$T = 10^{{{}}}$ K'.format(logT))
 
 fig.suptitle('Pressure difference (Timmes vs Helmholtz)')
 fig.set_size_inches(6,6)
-fig.savefig('fig1.png')
+fig.savefig('fig1.png', dpi=150)
 
 #+END_SRC
 
