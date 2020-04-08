@@ -13,10 +13,10 @@ test: test.o helmholtz.o
 	${FC} -o test.x test.o helmholtz.o
 	./test.x
 
-helmholtz.o: helmholtz.f90
+helmholtz.o: helmholtz.f90 const.dek implno.dek vector_eos.dek
 	${FC} -cpp -DTBLPATH="'${HELM_TABLE_DIR}/${HELM_TABLE_NAME}'" -ffree-line-length-none -c -fPIC $<
 
-eosfxt.o: eosfxt.f90
+eosfxt.o: eosfxt.f90 const.dek implno.dek vector_eos.dek
 	${FC} -c -fPIC $<
 
 %.o : %.f90
