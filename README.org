@@ -3,6 +3,10 @@ Python bindings for [[http://cococubed.asu.edu/code_pages/eos.shtml][Frank Timme
 
 This also includes bindings to the Timmes EOS (but only in Rho-T
 basis).
+
+If you use this code, please cite [[https://ui.adsabs.harvard.edu/abs/2000ApJS..126..501T/abstract][Timmes & Swesty (2000)]] and this software
+[[https://zenodo.org/badge/latestdoi/12258614][https://zenodo.org/badge/12258614.svg]].
+
 ** Prerequisites
 You must have numpy and a fortran compiler installed.  These bindings
 are constructed using [[https://docs.scipy.org/doc/numpy/f2py/index.html][f2py]].
